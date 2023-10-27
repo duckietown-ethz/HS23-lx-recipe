@@ -9,3 +9,6 @@ dt-duckiematrix-protocols-ente>=0.1.6
 
 # used by example notebooks
 ipywidgets
+
+# ROS via websocket in Python
+roslibpy
