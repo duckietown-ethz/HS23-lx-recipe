@@ -12,3 +12,5 @@ ipywidgets
 
 # ROS via websocket in Python
 roslibpy
+
+scikit-learn
