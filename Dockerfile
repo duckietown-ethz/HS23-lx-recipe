@@ -48,11 +48,11 @@ ENV DT_MODULE_TYPE="exercise" \
     DT_LAUNCH_PATH="${LAUNCH_PATH}" \
     DT_LAUNCHER="${LAUNCHER}"
 
-# install apt dependencies
+# install apt dependencies (recipe)
 COPY --from=recipe ./dependencies-apt.txt "${REPO_PATH}/"
 RUN dt-apt-install ${REPO_PATH}/dependencies-apt.txt
 
-# install python3 dependencies
+# install python3 dependencies (recipe)
 ARG PIP_INDEX_URL="https://pypi.org/simple"
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 COPY --from=recipe ./dependencies-py3.* "${REPO_PATH}/"
@@ -63,6 +63,16 @@ COPY --from=recipe ./assets "${REPO_PATH}/assets"
 
 # copy the source code (recipe)
 COPY --from=recipe ./packages "${REPO_PATH}/packages"
+
+# install apt dependencies (meat)
+COPY --from=meat ./dependencies-apt.txt "${REPO_PATH}/"
+RUN dt-apt-install ${REPO_PATH}/dependencies-apt.txt
+
+# install python3 dependencies (meat)
+ARG PIP_INDEX_URL="https://pypi.org/simple"
+ENV PIP_INDEX_URL=${PIP_INDEX_URL}
+COPY --from=meat ./dependencies-py3.* "${REPO_PATH}/"
+RUN dt-pip3-install "${REPO_PATH}/dependencies-py3.*"
 
 # copy the assets (meat)
 COPY --from=meat ./assets/. "${REPO_PATH}/assets/"

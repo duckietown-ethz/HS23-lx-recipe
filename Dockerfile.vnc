@@ -33,15 +33,25 @@ ARG TARGETVARIANT
 # check build arguments
 RUN dt-build-env-check "${EXERCISE_NAME}" "${MAINTAINER}" "${DESCRIPTION}"
 
-# install apt dependencies
+# install apt dependencies (recipe)
 COPY --from=recipe ./dependencies-apt.txt "/tmp/"
 RUN dt-apt-install /tmp/dependencies-apt.txt
 
-# install python3 dependencies
+# install python3 dependencies (recipe)
 ARG PIP_INDEX_URL="https://pypi.org/simple"
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 COPY --from=recipe ./dependencies-py3.* "/tmp/"
 RUN python3 -m pip install -r /tmp/dependencies-py3.txt
+
+# install apt dependencies (meat)
+COPY --from=meat ./dependencies-apt.txt "${REPO_PATH}/"
+RUN dt-apt-install ${REPO_PATH}/dependencies-apt.txt
+
+# install python3 dependencies (meat)
+ARG PIP_INDEX_URL="https://pypi.org/simple"
+ENV PIP_INDEX_URL=${PIP_INDEX_URL}
+COPY --from=meat ./dependencies-py3.* "${REPO_PATH}/"
+RUN dt-pip3-install "${REPO_PATH}/dependencies-py3.*"
 
 # store module metadata
 LABEL org.duckietown.label.module.type="exercise-vnc" \
