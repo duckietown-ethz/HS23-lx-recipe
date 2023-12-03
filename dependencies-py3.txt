@@ -13,4 +13,7 @@ ipywidgets
 # ROS via websocket in Python
 roslibpy
 
+# needed to talk to the robot's APIs
+requests
+
 scikit-learn
